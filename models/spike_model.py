@@ -18,10 +18,17 @@ class SpikeModel(SpikeModule):
                 lif_to_if = True
                 break
         self.spike_module_refactor(self.model, step=step, complementary=complementary, tmpr=tmpr, connect_f=connect_f)
-        if lif_to_if:
-            for m in self.model.modules():
-                if isinstance(m, LIFAct):
+        # if lif_to_if:
+        #     for m in self.model.modules():
+        #         if isinstance(m, LIFAct):
+        #             m.decay = 1.0
+        for m in self.model.modules():
+            if isinstance(m, LIFAct):
+                m.V_th = V_th
+                if lif_to_if:
                     m.decay = 1.0
+                else:
+                    m.decay = tau
 
     def spike_module_refactor(self, module: nn.Module, step=2, complementary='static', tmpr=False, connect_f='ADD'):
         """
